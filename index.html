@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Undangan Ulang Tahun - Merry</title>
+  <!-- Bootstrap 5 CSS + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- AOS CSS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <!-- Google Fonts: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #fef3e2;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* Opening overlay */
+    .opening-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(145deg, #ffb347, #ff7e05);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    .opening-screen.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .opening-card {
+      background: rgba(255,255,240,0.95);
+      backdrop-filter: blur(8px);
+      border-radius: 60px 20px 60px 20px;
+      padding: 2rem;
+      max-width: 90%;
+      width: 450px;
+      box-shadow: 0 25px 45px rgba(0,0,0,0.3);
+      border: 2px solid #fff9c4;
+    }
+
+    .opening-card h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #b64926;
+    }
+
+    .btn-buka {
+      background: #ff8800;
+      border: none;
+      padding: 12px 32px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      border-radius: 40px;
+      color: white;
+      transition: 0.2s;
+      box-shadow: 0 8px 0 #b45f06;
+    }
+
+    .btn-buka:active {
+      transform: translateY(4px);
+      box-shadow: 0 4px 0 #b45f06;
+    }
+
+    /* Main content */
+    .main-content {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.6s ease, visibility 0.6s;
+    }
+
+    .main-content.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .card-detail {
+      border-radius: 35px;
+      border: none;
+      overflow: hidden;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .card-detail:hover {
+      transform: translateY(-8px);
+    }
+
+    .rundown-card {
+      background: linear-gradient(145deg, #fff8e7, #fff0d4);
+      border-left: 8px solid #ff8800;
+    }
+
+    .rundown-item {
+      padding: 12px 0;
+      border-bottom: 1px dashed #ffd699;
+    }
+
+    .rundown-item:last-child {
+      border-bottom: none;
+    }
+
+    .rundown-time {
+      font-weight: 800;
+      color: #ff6b1f;
+      font-size: 1.1rem;
+    }
+
+    .rundown-desc {
+      font-weight: 600;
+      color: #5a3a1a;
+    }
+
+    .rundown-games {
+      font-size: 0.9rem;
+      color: #ff8800;
+      margin-top: 5px;
+    }
+
+    .map-container iframe {
+      width: 100%;
+      height: 280px;
+      border-radius: 20px;
+      border: 0;
+    }
+
+    .gallery-video iframe {
+      width: 100%;
+      border-radius: 28px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .footer-thanks {
+      background: #ffd966;
+      padding: 2rem;
+      border-radius: 40px 40px 0 0;
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    .music-control {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1050;
+      background: #ffaa33;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      color: white;
+      font-size: 1.5rem;
+      transition: 0.2s;
+    }
+
+    .music-control:hover {
+      background: #ff8c1a;
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 768px) {
+      .guest-name {
+        font-size: 1.5rem;
+      }
+      .rundown-time {
+        font-size: 0.9rem;
+      }
+      .rundown-desc {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- OPENING SCREEN (tanpa input nama) -->
+<div id="openingScreen" class="opening-screen">
+  <div class="opening-card" data-aos="zoom-in" data-aos-duration="1000">
+    <i class="fas fa-birthday-cake" style="font-size: 55px; color:#ff7e05;"></i>
+    <h2 class="mt-3">✨ MERRY'S BIRTHDAY CELEBRATION ✨</h2>
+    <button id="btnOpenInvite" class="btn-buka mt-3"><i class="fas fa-envelope-open-text"></i> Buka Undangan</button>
+    <p class="mt-3 small text-muted">Klik untuk membuka kejutan 🎁</p>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="mainContent" class="main-content">
+  
+  <!-- Detail Acara (LANGSUNG MUNCUL, tanpa header/welcome section) -->
+  <div class="container" id="detailAcara" style="margin-top: 2rem;">
+    <div class="text-center mb-5" data-aos="fade-right">
+      <h2 class="fw-bold"><span class="border-bottom border-warning border-4 pb-2">📋 Detail Acara</span></h2>
+      <p class="text-muted mt-2">Jangan sampai kelewatan ya!</p>
+    </div>
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-4" data-aos="flip-left" data-aos-delay="100">
+        <div class="card card-detail p-4 text-center bg-white">
+          <i class="fas fa-calendar-check fa-3x text-warning"></i>
+          <h4 class="mt-3 fw-bold">Tanggal</h4>
+          <p class="fs-5">Minggu, 03 Mei 2026</p>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="flip-left" data-aos-delay="200">
+        <div class="card card-detail p-4 text-center bg-white">
+          <i class="fas fa-hourglass-half fa-3x text-warning"></i>
+          <h4 class="mt-3 fw-bold">Waktu</h4>
+          <p class="fs-5">Mulai Pukul 19:00 WIB<br> (Kumpul 18:30)</p>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="flip-left" data-aos-delay="300">
+        <div class="card card-detail p-4 text-center bg-white">
+          <i class="fas fa-map-marker-alt fa-3x text-warning"></i>
+          <h4 class="mt-3 fw-bold">Lokasi</h4>
+          <p class="fs-5">GOR Nusa Kenari<br>Jl. Nusa Kenari No.65, Cinangka, Kec. Sawangan, Kota Depok</p>
+          <a href="#mapEmbed" class="btn btn-sm btn-outline-warning rounded-pill mt-2">Lihat Peta <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD RUNDOWN (DI ATAS PETA) -->
+  <div class="container mt-5" data-aos="fade-up">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card card-detail rundown-card p-4">
+          <div class="card-body">
+            <h3 class="fw-bold text-center mb-4" style="color: #ff6b1f;">
+              <i class="fas fa-list-ol"></i> Rundown Acara
+            </h3>
+            <div class="rundown-item">
+              <div class="d-flex flex-wrap justify-content-between align-items-start">
+                <span class="rundown-time"><i class="fas fa-gamepad"></i> Fun Games (12.00 - 15.00) 2 Lapangan</span>
+              </div>
+              <div class="rundown-desc mt-1">
+                Mabar PB Rangers, PB Fun Squad, PB H2R, PB D'Best
+              </div>
+              <div class="rundown-games">
+                <i class="fas fa-trophy"></i> Siapkan tim terbaikmu!
+              </div>
+            </div>
+            <div class="rundown-item">
+              <div class="d-flex flex-wrap justify-content-between align-items-start">
+                <span class="rundown-time"><i class="fas fa-utensils"></i> Makan Bersama (15.00 - 17.00)</span>
+              </div>
+              <div class="rundown-desc mt-1">
+                Makan sore dan halalbihalal
+              </div>
+              <div class="rundown-games">
+                <i class="fas fa-hand-sparkles"></i> Bersama keluarga dan teman-teman
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ <!-- Google Maps -->
+<div class="container mt-4" id="mapEmbed">
+  <div class="row justify-content-center">
+    <div class="col-lg-8" data-aos="zoom-in-up">
+      <div class="card card-detail p-3">
+        <div class="card-body text-center">
+          <h3 class="fw-bold"><i class="fas fa-map"></i> Lokasi Acara</h3>
+          <div class="map-container mt-3">
+            <!-- GANTI URL DI BAWAH INI dengan link maps Anda -->
+            <iframe src="https://maps.google.com/maps?q=GOR+Nusa+Kenari+Depok&t=&z=15&ie=UTF8&iwloc=&output=embed" allowfullscreen="" loading="lazy"></iframe>
+          </div>
+          <p class="mt-2 text-muted small">Klik "Lihat rute" pada peta untuk navigasi.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <!-- Galeri Video -->
+<div class="container mt-5">
+  <div class="text-center mb-4" data-aos="fade-up">
+    <h2 class="fw-bold"><i class="fas fa-video"></i> Supported by : DS Catering</h2>
+    <p class="text-muted">Video spesial 🎥</p>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-lg-7" data-aos="fade-up" data-aos-delay="100">
+      <div class="gallery-video">
+        <!-- VIDEO LOKAL -->
+        <video width="100%" controls style="border-radius: 28px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);">
+          <source src="DS Catering.mp4" type="video/mp4">
+          <!-- Jika punya file cadangan, tambahkan di sini -->
+          Browser Anda tidak mendukung tag video.
+        </video>
+        <p class="text-center text-muted mt-2">✨ Momen bahagia bersama ✨</p>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+
+  <!-- Penutup -->
+  <div class="footer-thanks" data-aos="fade-up">
+    <div class="container">
+      <i class="fas fa-heart fa-3x text-danger"></i>
+      <h2 class="fw-bold mt-3">Terima Kasih!</h2>
+      <p class="fs-5" id="thanksMessage">Di Tunggu Kehadirannya yaa guyss 🎉</p>
+      <p class="small mt-4">© arjuna 2026 - Undangan Ulang Tahun Merry</p>
+    </div>
+  </div>
+</div>
+
+<!-- MUSIC CONTROL -->
+<div id="musicToggleBtn" class="music-control" style="display: none;">
+  <i id="musicIcon" class="fas fa-music"></i>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script>
+  // Inisialisasi AOS
+  AOS.init({
+    duration: 900,
+    once: true,
+  });
+
+  // Ambil elemen
+  const openingScreen = document.getElementById('openingScreen');
+  const mainContent = document.getElementById('mainContent');
+  const btnOpen = document.getElementById('btnOpenInvite');
+  const musicToggleBtn = document.getElementById('musicToggleBtn');
+  const musicIcon = document.getElementById('musicIcon');
+  
+  let audio = null;
+  let isMusicPlaying = false;
+  
+  // Fungsi musik
+  function initAudio() {
+    if (!audio) {
+      audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3');
+      audio.loop = true;
+      audio.volume = 0.4;
+    }
+  }
+  
+  function playMusic() {
+    if (audio) {
+      audio.play().then(() => {
+        isMusicPlaying = true;
+        musicIcon.className = "fas fa-music";
+      }).catch(() => {
+        isMusicPlaying = false;
+        musicIcon.className = "fas fa-volume-mute";
+      });
+    }
+  }
+  
+  function pauseMusic() {
+    if (audio) {
+      audio.pause();
+      isMusicPlaying = false;
+      musicIcon.className = "fas fa-volume-mute";
+    }
+  }
+  
+  function toggleMusic() {
+    if (!audio) initAudio();
+    if (isMusicPlaying) {
+      pauseMusic();
+    } else {
+      playMusic();
+    }
+  }
+  
+  musicToggleBtn.addEventListener('click', toggleMusic);
+  
+  // TOMBOL BUKA UNDANGAN (tanpa input nama)
+  btnOpen.addEventListener('click', function() {
+    // Sembunyikan opening screen
+    openingScreen.classList.add('hide');
+    
+    // Tampilkan main content
+    mainContent.classList.add('show');
+    
+    // Tampilkan tombol musik
+    musicToggleBtn.style.display = "flex";
+    
+    // Mulai musik
+    initAudio();
+    playMusic();
+    
+    // Scroll halus ke detail acara
+    setTimeout(function() {
+      document.getElementById('detailAcara').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 500);
+  });
+  
+  // Smooth scroll untuk link anchor
+  $('a[href^="#"]').on('click', function(e) {
+    e.preventDefault();
+    var target = $(this.getAttribute('href'));
+    if (target.length) {
+      $('html, body').stop().animate({
+        scrollTop: target.offset().top - 70
+      }, 800);
+    }
+  });
+</script>
+</body>
+</html>
